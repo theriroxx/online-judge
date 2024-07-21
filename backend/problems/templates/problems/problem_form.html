@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /* Add custom styles here */
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'problem_list' %}">Problems</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        {% block content %}
+        <!-- Page specific content will be here -->
+        {% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if problem %}Edit Problem{% else %}Create Problem{% endif %}</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="col-8 mx-auto card p-4 shadow-lg">
+            <h1 class="text-center">{% if problem %}Edit Problem{% else %}Create New Problem{% endif %}</h1>
+            <hr />
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <h3>Test Cases</h3>
+                <div id="test-cases">
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="form-row" id="form-{{ forloop.counter0 }}">
+                            {{ form.as_p }}
+                            <div class="form-check">
+                                {{ form.DELETE }}
+                                <label class="form-check-label" for="{{ form.prefix }}-DELETE">Delete</label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-secondary" id="add-test-case">Add Test Case</button>
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn btn-primary">{% if problem %}Update{% else %}Create{% endif %} Problem</button>
+                    <a href="{% url 'problem_list' %}" class="btn btn-secondary">Back to Problem List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('add-test-case').onclick = function() {
+            var form_idx = document.querySelectorAll('.form-row').length;
+            var form_template = `
+                <div class="form-row" id="form-${form_idx}">
+                    <label for="id_test_cases-${form_idx}-input_data">Input data:</label>
+                    <textarea name="test_cases-${form_idx}-input_data" cols="40" rows="2" id="id_test_cases-${form_idx}-input_data"></textarea>
+                    <label for="id_test_cases-${form_idx}-expected_output">Expected output:</label>
+                    <textarea name="test_cases-${form_idx}-expected_output" cols="40" rows="2" id="id_test_cases-${form_idx}-expected_output"></textarea>
+                    <input type="hidden" name="test_cases-${form_idx}-id" id="id_test_cases-${form_idx}-id">
+                    <div class="form-check">
+                        <input type="checkbox" name="test_cases-${form_idx}-DELETE" id="id_test_cases-${form_idx}-DELETE">
+                        <label class="form-check-label" for="id_test_cases-${form_idx}-DELETE">Delete</label>
+                    </div>
+                </div>
+            `;
+            document.getElementById('test-cases').insertAdjacentHTML('beforeend', form_template);
+            document.getElementById('id_test_cases-TOTAL_FORMS').value = form_idx + 1;
+        };
+    </script>
+</body>
+</html>
