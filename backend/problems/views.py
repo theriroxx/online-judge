@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 def problem_list(request):
     problems = Problem.objects.all()
-    return render(request, 'problems/problem_list.html', {'problems': problems})
+    return render(request, 'problem_list.html', {'problems': problems})
 
 def create_problem(request):
     if request.method == 'POST':
@@ -24,7 +24,7 @@ def create_problem(request):
     else:
         form = ProblemForm()
         formset = TestCaseFormSet()
-    return render(request, 'problems/problem_form.html', {'form': form, 'formset': formset})
+    return render(request, 'problem_form.html', {'form': form, 'formset': formset})
 
 def edit_problem(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
@@ -38,12 +38,12 @@ def edit_problem(request, problem_id):
     else:
         form = ProblemForm(instance=problem)
         formset = TestCaseFormSet(instance=problem)
-    return render(request, 'problems/problem_form.html', {'form': form, 'formset': formset, 'problem': problem})
+    return render(request, 'problem_form.html', {'form': form, 'formset': formset, 'problem': problem})
 
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
     test_cases = problem.test_cases.all()
-    return render(request, 'problems/problem_detail.html', {'problem': problem, 'test_cases': test_cases})
+    return render(request, 'problem_detail.html', {'problem': problem, 'test_cases': test_cases})
 
 
 @login_required(login_url='/auth/login/')
@@ -58,8 +58,8 @@ def submit_code(request, problem_id):
             output = run_code(submission.lang, submission.code, submission.input)
             submission.output = output
             submission.save()
-            return render(request, "problems/result.html", {'submission': submission, 'problem': problem})
+            return render(request, "result.html", {'submission': submission, 'problem': problem})
     else:
         form = CodeSubmissionForm()
 
-    return render(request, 'problems/submit_code.html', {'form': form, 'problem': problem})
+    return render(request, 'submit_code.html', {'form': form, 'problem': problem})
