@@ -8,7 +8,6 @@ import uuid
 import subprocess
 from pathlib import Path
 
-@login_required(login_url='/auth/login/')
 def submit(request):
     if request.method == 'POST':
         form = CodeSubmissionForm(request.POST)
@@ -17,6 +16,8 @@ def submit(request):
             code = request.POST.get('code')
             lang = request.POST.get('lang')
             input = request.POST.get('input')
+            submission.input = submission.input.replace('\r', '')
+            submission.code = submission.code.replace('\r', '')
             output = run_code(
                 submission.lang, submission.code, submission.input
             )
@@ -28,7 +29,7 @@ def submit(request):
         
     return render(request, 'index.html', {'form': form})
 
-@login_required(login_url='/auth/login/')
+
 def run_code(lang, code, input):
     base_path = Path(settings.BASE_DIR)
     directories = {'codes', 'inputs', 'outputs'}

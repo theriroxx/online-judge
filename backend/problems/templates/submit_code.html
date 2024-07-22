@@ -44,26 +44,17 @@
 </html>
 
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Submit Code for {{ problem.title }}</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="col-8 mx-auto card p-4 shadow-lg">
-            <h1 class="text-center">Submit Code for {{ problem.title }}</h1>
-            <hr />
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-primary">Submit Code</button>
-                    <a href="{% url 'problem_detail' problem.id %}" class="btn btn-secondary">Back to Problem</a>
-                </div>
-            </form>
-        </div>
+<div class="container mt-5">
+    <div class="col-8 mx-auto card p-4 shadow-lg">
+        <h1 class="text-center">Submit Code for {{ problem.title }}</h1>
+        <hr />
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-between mt-3">
+                <button type="submit" class="btn btn-primary">Submit Code</button>
+                <a href="{% url 'problem_detail' problem.id %}" class="btn btn-secondary">Back to Problem</a>
+            </div>
+        </form>
     </div>
-</body>
-</html>
+</div>
