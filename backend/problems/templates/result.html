@@ -3,50 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}My Site{% endblock %}</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        /* Add custom styles here */
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'home' %}">Home</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'problem_list' %}">Problems</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        {% block content %}
-        <!-- Page specific content will be here -->
-        {% endblock %}
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Submission Result</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 </head>
@@ -61,6 +17,24 @@
             <pre>{{ submission.input }}</pre>
             <h3>Output:</h3>
             <pre>{{ submission.output }}</pre>
+            {% if results %}
+                <h3>Test Case Results:</h3>
+                <ul>
+                    {% for result in results %}
+                        <li>
+                            <strong>Input:</strong> <pre>{{ result.input }}</pre>
+                            <strong>Expected Output:</strong> <pre>{{ result.expected_output }}</pre>
+                            <strong>Actual Output:</strong> <pre>{{ result.actual_output }}</pre>
+                            <strong>Result:</strong> <pre>{{ result.pass|yesno:"Pass,Fail" }}</pre>
+                        </li>
+                    {% endfor %}
+                    {% for output in outputs %}
+                        <li>
+                            <strong>Output:</strong> <pre>{{ output }}</pre>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <div class="d-flex justify-content-between mt-3">
                 <a href="{% url 'problem_list' %}" class="btn btn-secondary">Back to Problem List</a>
                 <a href="{% url 'problem_detail' submission.problem.id %}" class="btn btn-secondary">Back to Problem</a>

@@ -34,6 +34,8 @@ def run_code(lang, code, input):
     base_path = Path(settings.BASE_DIR)
     directories = {'codes', 'inputs', 'outputs'}
 
+    input = input.replace('\r', '')
+    code = code.replace('\r', '')
     for directory in directories:
         dir_path = base_path / directory
         if not dir_path.exists():
@@ -85,4 +87,3 @@ def run_code(lang, code, input):
         output_data = output_file.read()
 
     return output_data
-
