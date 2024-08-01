@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Problem, CodeSubmission
 from .forms import ProblemForm, TestCaseFormSet
 from submit.forms import CodeSubmissionForm
-from submit.views import run_code as run_user_code  # Importing run_code as run_user_code to avoid conflicts
+from submit.views import run_code as run_user_code
 from django.contrib.auth.decorators import login_required
 
 def problem_list(request):
@@ -52,17 +52,16 @@ def run_code(request, problem_id):
         if form.is_valid():
             submission = form.save(commit=False)
             submission.problem = problem
-            submission.user = request.user  # Ensure the user is assigned
+            submission.user = request.user 
             submission.save()
 
-            # Run the code and save output
             output = run_user_code(submission.lang, submission.code, submission.input)
             submission.output = output
             submission.save()
 
             return render(request, "result.html", {'submission': submission, 'problem': problem})
         else:
-            print(form.errors)  # For debugging form errors
+            print(form.errors)
     else:
         form = CodeSubmissionForm()
 
@@ -100,7 +99,7 @@ def submit_code(request, problem_id):
 
             return render(request, "result.html", {'submission': submission, 'problem': problem, 'results': results,'outputs': outputs })
         else:
-            print(form.errors)  # For debugging form errors
+            print(form.errors)
     else:
         form = CodeSubmissionForm()
 

@@ -8,26 +8,26 @@ import uuid
 import subprocess
 from pathlib import Path
 
-def submit(request):
-    if request.method == 'POST':
-        form = CodeSubmissionForm(request.POST)
-        if form.is_valid():
-            submission = form.save()
-            code = request.POST.get('code')
-            lang = request.POST.get('lang')
-            input = request.POST.get('input')
-            submission.input = submission.input.replace('\r', '')
-            submission.code = submission.code.replace('\r', '')
-            output = run_code(
-                submission.lang, submission.code, submission.input
-            )
-            submission.output = output
-            submission.save()
-            return render(request, "result.html", {'submission': submission})
-    else:
-        form = CodeSubmissionForm()
+# def submit(request):
+#     if request.method == 'POST':
+#         form = CodeSubmissionForm(request.POST)
+#         if form.is_valid():
+#             submission = form.save()
+#             code = request.POST.get('code')
+#             lang = request.POST.get('lang')
+#             input = request.POST.get('input')
+#             submission.input = submission.input.replace('\r', '')
+#             submission.code = submission.code.replace('\r', '')
+#             output = run_code(
+#                 submission.lang, submission.code, submission.input
+#             )
+#             submission.output = output
+#             submission.save()
+#             return render(request, "result.html", {'submission': submission})
+#     else:
+#         form = CodeSubmissionForm()
         
-    return render(request, 'index.html', {'form': form})
+#     return render(request, 'index.html', {'form': form})
 
 
 def run_code(lang, code, input):
